@@ -4,10 +4,10 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'                                 // <------DON'T change this
-        DOCKER_IMAGE = 'cithit/roseaw'                                                 // <------change this
+        DOCKER_IMAGE = 'cithit/minterjt'
         IMAGE_TAG = "build-${BUILD_NUMBER}"
-        GITHUB_URL = 'https://github.com/miamioh-cit/225-lab3-1.git'                   // <------change this
-        KUBECONFIG = credentials('roseaw-225')                                             // <------change this
+        GITHUB_URL = 'https://github.com/srxxm49mps-png/225-lab3-1.git'
+        KUBECONFIG = credentials('minterjt') // Miami ID per instructor's October 2 Slack guidance; verify in Jenkins.
     }
 
     stages {
@@ -40,10 +40,10 @@ pipeline {
             steps {
                 script {
                     // Set up Kubernetes configuration using the specified KUBECONFIG
-                    def kubeConfig = readFile(KUBECONFIG)
                     // Update deployment-dev.yaml to use the new image tag
                     sh "sed -i 's|${DOCKER_IMAGE}:latest|${DOCKER_IMAGE}:${IMAGE_TAG}|' deployment-dev.yaml"
                     sh "kubectl apply -f deployment-dev.yaml"
+                    sh "kubectl rollout status deployment/minterjt-dev-deployment --timeout=180s"
                 }
             }
         }
